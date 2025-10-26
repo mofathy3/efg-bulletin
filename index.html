@@ -2,58 +2,62 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>EFG Hermes Technical Bulletin</title>
-<script>
-async function openReport(){
-  function formatDate(date){
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth()+1).padStart(2,'0');
-    const dd = String(date.getDate()).padStart(2,'0');
-    return {yyyy,mm,dd,display:`${dd}-${mm}-${yyyy}`};
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Screener Data Viewer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 30px;
+    background-color: #f5f5f5;
   }
-
-  async function checkURL(url){
-    try {
-      const res = await fetch(url, { method: 'HEAD' });
-      return res.ok;
-    } catch {
-      return false;
-    }
+  h1 {
+    text-align: center;
+    color: #333;
   }
-
-  const base = "https://cdn.efghermes.com/Retail/Technical%20Bulletin%20Report";
-  const today = new Date();
-  const todayFmt = formatDate(today);
-
-  const urlToday = `${base}/${todayFmt.yyyy}/${todayFmt.mm}/${todayFmt.dd}/0/THE%20TECHNICAL%20BULLETIN%20${todayFmt.display}.pdf`;
-
-  // Wait 3 seconds before starting
-  setTimeout(async () => {
-    const todayExists = await checkURL(urlToday);
-
-    if (todayExists) {
-      location.href = urlToday;
-    } else {
-      // Prompt user for last published date (default = yesterday)
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      const yFmt = formatDate(yesterday);
-      const input = prompt("Today's report not found.\nPlease enter last published date (DD-MM-YYYY):", yFmt.display);
-
-      if (input) {
-        const [dd, mm, yyyy] = input.split('-');
-        const urlManual = `${base}/${yyyy}/${mm}/${dd}/0/THE%20TECHNICAL%20BULLETIN%20${input}.pdf`;
-        location.href = urlManual;
-      }
-    }
-  }, 3000);
-}
-</script>
+  #data {
+    margin-top: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  input[type="date"], button {
+    font-size: 16px;
+    padding: 8px;
+    margin-right: 10px;
+  }
+</style>
 </head>
-<body onload="openReport()">
-  <h2 style="text-align:center; margin-top:40px;">
-    Opening the latest EFG Hermes Technical Bulletin...<br><br>
-    <small>(Redirecting in 3 seconds)</small>
-  </h2>
-</body>
-</html>
+<body>
+<h1>Stock Screener Data Viewer</h1>
+
+<label for="dateInput">Select Date:</label>
+<input type="date" id="dateInput">
+<button onclick="loadData()">Load Data</button>
+
+<div id="data"></div>
+
+<script>
+function loadData() {
+  const date = document.getElementById('dateInput').value;
+  if (!date) {
+    alert('Please select a date first.');
+    return;
+  }
+
+  // Format date as DD-MM-YYYY
+  const [year, month, da]()
