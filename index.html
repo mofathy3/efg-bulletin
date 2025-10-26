@@ -12,40 +12,41 @@ async function openReport(){
     return {yyyy,mm,dd,display:`${dd}-${mm}-${yyyy}`};
   }
 
-  async function checkAndOpen(primaryURL, fallbackURL){
-    try{
-      const res = await fetch(primaryURL,{method:'HEAD'});
-      if(res.ok){
-        location.href = primaryURL;
-      } else {
-        location.href = fallbackURL;
-      }
+  async function checkURL(url){
+    try {
+      const res = await fetch(url, { method: 'HEAD' });
+      return res.ok;
     } catch {
-      location.href = fallbackURL;
+      return false;
     }
   }
 
   const base = "https://cdn.efghermes.com/Retail/Technical%20Bulletin%20Report";
   const today = new Date();
-  const day = today.getDay(); // 0=Sun, 1=Mon, ... 6=Sat
   const todayFmt = formatDate(today);
-  let fallbackDate = new Date(today);
-
-  if(day === 5 || day === 6){
-    // Friday or Saturday → fallback to Thursday
-    const diff = (day === 5) ? 1 : 2;
-    fallbackDate.setDate(today.getDate() - diff - 1); // move to Thursday
-  } else {
-    // Sunday–Thursday → fallback to yesterday
-    fallbackDate.setDate(today.getDate() - 1);
-  }
-
-  const fallbackFmt = formatDate(fallbackDate);
 
   const urlToday = `${base}/${todayFmt.yyyy}/${todayFmt.mm}/${todayFmt.dd}/0/THE%20TECHNICAL%20BULLETIN%20${todayFmt.display}.pdf`;
-  const urlFallback = `${base}/${fallbackFmt.yyyy}/${fallbackFmt.mm}/${fallbackFmt.dd}/0/THE%20TECHNICAL%20BULLETIN%20${fallbackFmt.display}.pdf`;
 
-  setTimeout(async ()=>{ await checkAndOpen(urlToday,urlFallback); }, 3000);
+  // Wait 3 seconds before starting
+  setTimeout(async () => {
+    const todayExists = await checkURL(urlToday);
+
+    if (todayExists) {
+      location.href = urlToday;
+    } else {
+      // Prompt user for last published date (default = yesterday)
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      const yFmt = formatDate(yesterday);
+      const input = prompt("Today's report not found.\nPlease enter last published date (DD-MM-YYYY):", yFmt.display);
+
+      if (input) {
+        const [dd, mm, yyyy] = input.split('-');
+        const urlManual = `${base}/${yyyy}/${mm}/${dd}/0/THE%20TECHNICAL%20BULLETIN%20${input}.pdf`;
+        location.href = urlManual;
+      }
+    }
+  }, 3000);
 }
 </script>
 </head>
