@@ -18,7 +18,7 @@ async function openReport(){
   yesterday.setDate(today.getDate() - 1);
   const yFmt = formatDate(yesterday);
 
-  const input = prompt("Enter the report date (DD-MM-YYYY):", yFmt.display);
+  const input = prompt("Enter EFG Technical Bulletin date (DD-MM-YYYY):", yFmt.display);
 
   if (input) {
     const [dd, mm, yyyy] = input.split('-');
