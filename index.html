@@ -14,11 +14,9 @@ async function openReport(){
 
   const base = "https://cdn.efghermes.com/Retail/Technical%20Bulletin%20Report";
   const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  const yFmt = formatDate(yesterday);
+  const tFmt = formatDate(today);
 
-  const input = prompt("Enter EFG Technical Bulletin date (DD-MM-YYYY):", yFmt.display);
+  const input = prompt("Enter the report date (DD-MM-YYYY):", tFmt.display);
 
   if (input) {
     const [dd, mm, yyyy] = input.split('-');
