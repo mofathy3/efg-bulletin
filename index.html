@@ -7,20 +7,25 @@
 async function openReport(){
   function formatDate(date){
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth()+1).padStart(2,'0');
-    const dd = String(date.getDate()).padStart(2,'0');
-    return {yyyy,mm,dd,display:`${dd}-${mm}-${yyyy}`};
+    const m = date.getMonth() + 1;  // no leading zero
+    const d = date.getDate();       // no leading zero
+    const mm = String(m).padStart(2, '0');
+    const dd = String(d).padStart(2, '0');
+    return { yyyy, m, d, mm, dd, display: `${dd}-${mm}-${yyyy}` };
   }
 
   const base = "https://cdn.efghermes.com/Retail/Technical%20Bulletin%20Report";
   const today = new Date();
   const tFmt = formatDate(today);
 
-  const input = prompt("Enter the report date (DD-MM-YYYY):", tFmt.display);
+  const input = prompt("Enter the report date (D-M-YYYY):", `${tFmt.d}-${tFmt.m}-${tFmt.yyyy}`);
 
   if (input) {
-    const [dd, mm, yyyy] = input.split('-');
-    const urlManual = `${base}/${yyyy}/${mm}/${d}/0/THE%20TECHNICAL%20BULLETIN%20${input}.pdf`;
+    const [d, m, yyyy] = input.split('-');
+    // Build URL with unpadded day/month in path but padded in filename
+    const dd = String(d).padStart(2, '0');
+    const mm = String(m).padStart(2, '0');
+    const urlManual = `${base}/${yyyy}/${m}/${d}/0/THE%20TECHNICAL%20BULLETIN%20${dd}-${mm}-${yyyy}.pdf`;
     location.href = urlManual;
   }
 }
