@@ -20,7 +20,7 @@ async function openReport(){
 
   if (input) {
     const [dd, mm, yyyy] = input.split('-');
-    const urlManual = `${base}/${yyyy}/${mm}/${dd}/0/THE%20TECHNICAL%20BULLETIN%20${input}.pdf`;
+    const urlManual = `${base}/${yyyy}/${mm}/${d}/0/THE%20TECHNICAL%20BULLETIN%20${input}.pdf`;
     location.href = urlManual;
   }
 }
